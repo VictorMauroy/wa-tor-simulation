@@ -1,5 +1,7 @@
 class Fish :
 
+    appearance = "p"
+
     def __init__(self) -> None:
         self.position = "To determine"
         self.timeBfrReproduction = 5
@@ -20,6 +22,7 @@ class Fish :
 
 class Shark (Fish) :
 
+    appearance = "$"
     maxEnergy = 9
     energyByDish = 3
 
