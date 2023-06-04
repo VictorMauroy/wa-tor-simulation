@@ -9,7 +9,7 @@ fish_population = 0
 shark_population = 0
 PLANET_WIDTH = 10
 PLANET_HEIGHT = 20
-REFRESH_DELAY = 0.5
+REFRESH_DELAY = 1
 
 # Create a dictionnary filled with dots
 planet_map = { (x, y): "." for x in range(PLANET_WIDTH) for y in range(PLANET_HEIGHT)} 
