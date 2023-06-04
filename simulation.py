@@ -21,10 +21,10 @@ def generate_ecosystem() -> None :
     # Advice : Create fishs on 1/3 of the map and a shark population equal to 1/3 of the fishs one
     # Generate fishs and sharks to a random position.
     global planet_map
-    PLANET_WIDTH
-    PLANET_HEIGHT
     global shark_population
     global fish_population
+    global fishs_list
+    global sharks_list
 
     dictionnayLength = len(planet_map)
     fish_population = fish_number = dictionnayLength // 3
@@ -36,27 +36,29 @@ def generate_ecosystem() -> None :
 
         if planet_map[randomLine, randomColumn] == "." :
             fish_number -= 1
-            planet_map[randomLine, randomColumn] = "p"    
+            new_fish = Fish()
+            planet_map[randomLine, randomColumn] = new_fish
+            fishs_list.append(new_fish)
+
 
 def show_map() -> None :
     """Show the current situation of the planet, called each frame"""
     global planet_map
-    PLANET_WIDTH
-    PLANET_HEIGHT
     
     for x in range(PLANET_WIDTH) :
         print("|", end = "")
         for y in range(PLANET_HEIGHT) :
-            if(planet_map[x,y]) == "." :
+            cell = planet_map[x,y]
+            if cell == "." :
                 print(".", end=" ")
-            else:
-                print(planet_map[x,y], end=" ")
+            elif isinstance(cell, Fish) :
+                print(cell.appearance, end=" ")
         print("|")
 
 generate_ecosystem()
 
 while(simulate) :
-
+    print(f"Number of fishs : {len(fishs_list)}")
     show_map()
 
     """for fish in fishs_list :  #Bien penser à assigner le type Fish
