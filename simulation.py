@@ -7,70 +7,46 @@ from livingthings import Shark
 simulate = True
 fish_population = 0
 shark_population = 0
-planet_width = 10
-planet_height = 20
-planet_map = { (x, y): "." for x in range(planet_width) for y in range(planet_height)} # Create a dictionnary filled with dots
-#planet_map = [["."] * 10] * 10 # Create an empty 2 by 2 array matrix
-empty_cells = []
+PLANET_WIDTH = 10
+PLANET_HEIGHT = 20
+REFRESH_DELAY = 0.5
+
+# Create a dictionnary filled with dots
+planet_map = { (x, y): "." for x in range(PLANET_WIDTH) for y in range(PLANET_HEIGHT)} 
 fishs_list = []
 sharks_list = []
-refresh_delay = 0.5
 
 def generate_ecosystem() -> None :
-    """Create sharks and fishs at the beginning of the simulation"""
+    """Create sharks and fishs at random position, at the beginning of the simulation"""
     # Advice : Create fishs on 1/3 of the map and a shark population equal to 1/3 of the fishs one
-    # Generate fishs and sharks to a random position. I must use an array which list every empty cell.
-    #global empty_cells
+    # Generate fishs and sharks to a random position.
     global planet_map
-    global planet_width
-    global planet_height
-    #empty_cells = planet_map.copy()
+    PLANET_WIDTH
+    PLANET_HEIGHT
+    global shark_population
+    global fish_population
 
     dictionnayLength = len(planet_map)
-    fish_number = dictionnayLength // 3
-    shark_number = fish_number // 3
-    #print(f"Line : {vertical_size} and columns : {horizontal_size}")
+    fish_population = fish_number = dictionnayLength // 3
+    shark_population = shark_number = fish_number // 3
 
     while fish_number > 0 :
-        randomLine = randint(0, planet_width -1)
-        randomColumn = randint(0, planet_height - 1)
+        randomLine = randint(0, PLANET_WIDTH -1)
+        randomColumn = randint(0, PLANET_HEIGHT - 1)
 
         if planet_map[randomLine, randomColumn] == "." :
             fish_number -= 1
-            planet_map[randomLine, randomColumn] = "p"
-        
-
-    """
-    vertical_size = len(planet_map)
-    horizontal_size =  len(planet_map[0])
-
-    while fish_number > 0 :
-        randomLine = randint(0, vertical_size-1)
-        randomColumn = randint(0, horizontal_size-1)
-        
-        if planet_map[randomLine][randomColumn] == "." :
-            fish_number -= 1
-            planet_map[randomLine][randomColumn] = "p"
-        
-        print(fish_number)"""
+            planet_map[randomLine, randomColumn] = "p"    
 
 def show_map() -> None :
     """Show the current situation of the planet, called each frame"""
-    """for x in planet_map :
-        print("|", end = "")
-        for y in x :
-            if(y == "."):
-                print(".", end=" ")
-            else:
-                print(y, end=" ")
-        print("|")"""
     global planet_map
-    global planet_width
-    global planet_height
+    PLANET_WIDTH
+    PLANET_HEIGHT
     
-    for x in range(planet_width) :
+    for x in range(PLANET_WIDTH) :
         print("|", end = "")
-        for y in range(planet_height) :
+        for y in range(PLANET_HEIGHT) :
             if(planet_map[x,y]) == "." :
                 print(".", end=" ")
             else:
@@ -88,5 +64,5 @@ while(simulate) :
     for shark in sharks_list :
         shark.Update()"""
 
-    time.sleep(0.5)
+    time.sleep(REFRESH_DELAY)
     os.system("clear") #for linux and "cls" for windows
