@@ -38,6 +38,7 @@ def generate_ecosystem() -> None :
             fish_number -= 1
             new_fish = Fish()
             planet_map[randomLine, randomColumn] = new_fish
+            new_fish.position = (randomLine, randomColumn)
             fishs_list.append(new_fish)
 
 
@@ -52,7 +53,7 @@ def show_map() -> None :
             if cell == "." :
                 print(".", end=" ")
             elif isinstance(cell, Fish) :
-                print(cell.appearance, end=" ")
+                print(cell.APPEARANCE, end=" ")
         print("|")
 
 generate_ecosystem()

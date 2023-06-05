@@ -1,22 +1,22 @@
 class Fish :
 
-    appearance = "p"
+    APPEARANCE = "p"
 
     def __init__(self) -> None:
-        self.position = "To determine"
+        self.position:tuple
         self.timeBfrReproduction = 5
 # region Movement
-    def CanMove(self) -> None:
+    def can_move(self) -> None:
         """_summary_"""
     
-    def Move(self) -> None:
+    def move(self) -> None:
         """_summary_"""
 #endregion
-    def Reproduction(self) -> None :
+    def reproduction(self) -> None :
         """_summary_"""
 
     # Update is called at each frame
-    def Update(self) -> None :
+    def update(self) -> None :
         """Determine next action at each frame depending of
         the current fish state and its surrounding"""
         # Check if movement is possible, if yes : has reproduction counter
@@ -24,9 +24,9 @@ class Fish :
 
 class Shark (Fish) :
 
-    appearance = "$"
-    maxEnergy = 9
-    energyByDish = 3
+    APPEARANCE = "$"
+    MAX_ENERGY = 9
+    ENERGY_BY_DISHS = 3
 
     def __init__(self) -> None:
         super().__init__()
@@ -34,28 +34,28 @@ class Shark (Fish) :
         self.currentEnergy = 5
     
 #region Determine if movement is possible and move if yes
-    def CanMove(self) -> None:
+    def can_move(self) -> None:
         """_summary_"""
-        return super().CanMove()
+        return super().can_move()
     
-    def Move(self) -> None:
+    def move(self) -> None:
         """_summary_"""
-        return super().Move()
+        return super().move()
 #endregion
     
 #region Find fish and eat it
-    def FindFish() -> None:
+    def find_fish() -> None:
         """_summary_"""
 
-    def Eat_Fish(self) -> None:
+    def eat_fish(self) -> None:
         """_summary_"""
 #endregion
     
-    def Reproduction(self) -> None:
+    def reproduction(self) -> None:
         """_summary_"""
-        return super().Reproduction()
+        return super().reproduction()
     
-    def Update(self) -> None:
+    def update(self) -> None:
         """Determine next action at each frame depending of
         the current shark state and its surrounding"""
         # When its turn begins : First, search fish in adjacent cells (Find Fish) 
