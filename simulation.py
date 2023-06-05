@@ -62,10 +62,10 @@ while(simulate) :
     print(f"Number of fishs : {len(fishs_list)}")
     show_map()
 
-    """for fish in fishs_list :  #Bien penser à assigner le type Fish
-        fish.Update()
+    for fish in fishs_list :
+        fish.update()
     for shark in sharks_list :
-        shark.Update()"""
+        shark.update()
 
     time.sleep(REFRESH_DELAY)
     os.system("clear") #for linux and "cls" for windows
