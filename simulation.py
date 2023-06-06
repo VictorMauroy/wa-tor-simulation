@@ -40,6 +40,17 @@ def generate_ecosystem() -> None :
             planet_map[randomLine, randomColumn] = new_fish
             new_fish.position = (randomLine, randomColumn)
             fishs_list.append(new_fish)
+    
+    while shark_number > 0 :
+        randomLine = randint(0, PLANET_WIDTH -1)
+        randomColumn = randint(0, PLANET_HEIGHT - 1)
+
+        if planet_map[randomLine, randomColumn] == "." :
+            shark_number -= 1
+            new_shark = Shark()
+            planet_map[randomLine, randomColumn] = new_shark
+            new_shark.position = (randomLine, randomColumn)
+            sharks_list.append(new_shark)
 
 
 def show_map() -> None :

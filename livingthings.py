@@ -24,7 +24,6 @@ class Fish :
 
         if not isinstance(planet_map[line, column], Fish) :
             available_pos_list.append((line, column))
-        #return available_pos_list
 
     def search_available_positions(self) -> list:
         """Search for available positions in the adjacents cases
@@ -39,8 +38,6 @@ class Fish :
         self.get_free_position(x + 1, y, available_positions)
         self.get_free_position(x - 1, y, available_positions)
         return available_positions
-    # Q : Demander si on peut se passer de l'assignation car les listes sont liées ?
-    # (Pas besoin de list.copy)
 
     def move(self, available_positions:list) -> None:
         """If an adjacent position is available, move to it, else stay at our current position"""
@@ -70,7 +67,7 @@ class Fish :
         babyFish = Fish()
         planet_map[old_x, old_y] = babyFish
         babyFish.position = (old_x, old_y)
-        fishs_list.append(babyFish) 
+        fishs_list.append(babyFish)
 
     # Update is called at each frame
     def update(self) -> None :
