@@ -95,9 +95,9 @@ class Shark (Fish) :
         """_summary_"""
         return super().search_available_positions()
     
-    def move(self) -> None:
+    def move(self, available_positions:list) -> None:
         """_summary_"""
-        return super().move()
+        return super().move(available_positions)
 #endregion
     
 #region Find fish and eat it
@@ -108,9 +108,15 @@ class Shark (Fish) :
         """_summary_"""
 #endregion
     
-    def reproduction(self) -> None:
+    def reproduction(self, old_x, old_y) -> None:
         """_summary_"""
-        return super().reproduction()
+        from simulation import planet_map
+        from simulation import sharks_list
+
+        babyShark = Shark()
+        planet_map[old_x, old_y] = babyShark
+        babyShark.position = (old_x, old_y)
+        sharks_list.append(babyShark)
     
     def update(self) -> None:
         """Determine next action at each frame depending of
@@ -120,3 +126,5 @@ class Shark (Fish) :
         # to a random location, adjacent cell (CanMove). If yes :
         # If reproduction counter has reached 0 => make a baby when moving, move only.
         # Special : movement cost one energy, if energy has reached 0 : die and delete shark
+
+        self.move(self.search_available_positions())

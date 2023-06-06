@@ -71,6 +71,7 @@ generate_ecosystem()
 
 while(simulate) :
     print(f"Number of fishs : {len(fishs_list)}")
+    print(f"Number of SHARKS : {len(sharks_list)}")
     show_map()
 
     for fish in fishs_list :
