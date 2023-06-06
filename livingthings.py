@@ -2,11 +2,11 @@ from random import randint
 
 class Fish :
 
-    APPEARANCE = "p"
+    APPEARANCE = "\033[96mp\033[00m" # Char 'p' with cyan color
 
     def __init__(self) -> None:
         self.position:tuple
-        self.timeBfrReproduction = 5
+        self.timeBfrReproduction = 6
 # region Movement
     def get_free_position(self, line:int, column:int, available_pos_list:list) -> None : 
         """Check if a cell is occupied at the given line and column given 
@@ -17,16 +17,12 @@ class Fish :
         from simulation import PLANET_WIDTH
         from simulation import PLANET_HEIGHT
         from simulation import planet_map
+
         # Fix the coordonates if the position exceed the limits
-        """if line < 0 : line = PLANET_WIDTH - 1
-        if line >= PLANET_WIDTH : line = 0
-        if column < 0 : column = PLANET_HEIGHT
-        if column >= PLANET_HEIGHT : column = 0"""
-        # Code below is the same as above
         line = line % PLANET_WIDTH
         column = column % PLANET_HEIGHT
 
-        if not isinstance(planet_map[line, column], Fish) : 
+        if not isinstance(planet_map[line, column], Fish) :
             available_pos_list.append((line, column))
         #return available_pos_list
 
@@ -38,7 +34,7 @@ class Fish :
         # Ci-dessous : Pas besoin de récupérer la liste, celle-ci est référencée et reste connectée 
         # à travers la fonction (on l'a assignée dans les paramètres). 
         # La mettre à jour va donc aussi avoir effet ici 
-        self.get_free_position(x, y + 1, available_positions) 
+        self.get_free_position(x, y + 1, available_positions)
         self.get_free_position(x, y - 1, available_positions)
         self.get_free_position(x + 1, y, available_positions)
         self.get_free_position(x - 1, y, available_positions)
@@ -49,18 +45,32 @@ class Fish :
     def move(self, available_positions:list) -> None:
         """If an adjacent position is available, move to it, else stay at our current position"""
         from simulation import planet_map
-        
+
         if len(available_positions) > 0 :
             # nextPosition = Tuple
-            nextPosition = available_positions[randint(0, len(available_positions)-1)] 
+            nextPosition = available_positions[randint(0, len(available_positions)-1)]
+            
+            # If gestation ends, create a new fish at our old position. Else live an empty cell
             old_x, old_y = self.position
-            planet_map[old_x, old_y] = "." # Modify here for reproduction
+            self.timeBfrReproduction -= 1
+            if self.timeBfrReproduction == 0 :
+                self.reproduction(old_x, old_y)
+            else :
+                planet_map[old_x, old_y] = "."
+            
             self.position = nextPosition
             planet_map[self.position] = self
 
 #endregion
-    def reproduction(self) -> None :
-        """_summary_"""
+    def reproduction(self, old_x, old_y) -> None :
+        """Create a new fish at our old position and initialize it"""
+        from simulation import planet_map
+        from simulation import fishs_list
+
+        babyFish = Fish()
+        planet_map[old_x, old_y] = babyFish
+        babyFish.position = (old_x, old_y)
+        fishs_list.append(babyFish) 
 
     # Update is called at each frame
     def update(self) -> None :
@@ -74,7 +84,7 @@ class Fish :
 
 class Shark (Fish) :
 
-    APPEARANCE = "$"
+    APPEARANCE = "\033[91m$\033[00m" # Char '$' with red color
     MAX_ENERGY = 9
     ENERGY_BY_DISHS = 3
 
