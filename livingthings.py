@@ -7,7 +7,8 @@ class Fish :
     def __init__(self) -> None:
         self.position:tuple
         self.timeBfrReproduction = 6
-# region Movement
+
+#region Movement
     def get_free_position(self, line:int, column:int, available_pos_list:list) -> None : 
         """Check if a cell is occupied at the given line and column given 
         and add it to the list of available positions.
@@ -39,12 +40,12 @@ class Fish :
         self.get_free_position(x - 1, y, available_positions)
         return available_positions
 
-    def move(self, available_positions:list) -> None:
+    def move(self, available_positions:list) -> bool:
         """If an adjacent position is available, move to it, else stay at our current position"""
         from simulation import planet_map
 
         if len(available_positions) > 0 :
-            # nextPosition = Tuple
+            # nextPosition is a Tuple
             nextPosition = available_positions[randint(0, len(available_positions)-1)]
             
             # If gestation ends, create a new fish at our old position. Else live an empty cell
@@ -57,8 +58,12 @@ class Fish :
             
             self.position = nextPosition
             planet_map[self.position] = self
+            return True
+        else :
+            return False
 
 #endregion
+
     def reproduction(self, old_x, old_y) -> None :
         """Create a new fish at our old position and initialize it"""
         from simulation import planet_map
@@ -69,7 +74,7 @@ class Fish :
         babyFish.position = (old_x, old_y)
         fishs_list.append(babyFish)
 
-    # Update is called at each frame
+    # Update is called at each refresh
     def update(self) -> None :
         """Determine next action at each frame depending of
         the current fish state and its surrounding"""
@@ -82,34 +87,36 @@ class Fish :
 class Shark (Fish) :
 
     APPEARANCE = "\033[91m$\033[00m" # Char '$' with red color
-    MAX_ENERGY = 9
+    MAX_ENERGY = 10
     ENERGY_BY_DISHS = 3
 
     def __init__(self) -> None:
         super().__init__()
         self.timeBfrReproduction = 7
-        self.currentEnergy = 5
+        self.currentEnergy = 4
     
 #region Determine if movement is possible and move if yes
     def search_available_positions(self) -> None:
-        """_summary_"""
         return super().search_available_positions()
     
     def move(self, available_positions:list) -> None:
-        """_summary_"""
-        return super().move(available_positions)
+        if super().move(available_positions) :
+            self.currentEnergy -= 1
 #endregion
     
 #region Find fish and eat it
-    def find_fish() -> None:
-        """_summary_"""
+    def try_fish_position(self, line:int, column:int, fish_pos_list:list):
+        """"""
+    
+    def find_fish(self) -> list[tuple] :
+        """Looks at adjacent cells for fishs and return their positions if finded"""
 
-    def eat_fish(self) -> None:
-        """_summary_"""
+    def eat_fish(self, fish_positions:list[tuple]) -> None:
+        """If fishs were finded at adjacent cases, then eat it"""
 #endregion
     
     def reproduction(self, old_x, old_y) -> None:
-        """_summary_"""
+        """Create a new shark at our old position and initialize it"""
         from simulation import planet_map
         from simulation import sharks_list
 
@@ -126,5 +133,14 @@ class Shark (Fish) :
         # to a random location, adjacent cell (CanMove). If yes :
         # If reproduction counter has reached 0 => make a baby when moving, move only.
         # Special : movement cost one energy, if energy has reached 0 : die and delete shark
+        from simulation import planet_map
+        from simulation import sharks_list
 
-        self.move(self.search_available_positions())
+        # First : try to eat a fish by checking adjcacents cases
+        if not self.eat_fish(self.find_fish()) : 
+            # Then, if no fishs were finded, try to move
+            self.move(self.search_available_positions())
+
+        if self.currentEnergy <= 0 :
+            planet_map[self.position] = "."
+            sharks_list.remove(self)
