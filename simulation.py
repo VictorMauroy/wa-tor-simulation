@@ -80,4 +80,4 @@ while(simulate) :
         shark.update()
 
     time.sleep(REFRESH_DELAY)
-    os.system("clear") #for linux and "cls" for windows
+    os.system("cls") #"clear" for linux and "cls" for windows

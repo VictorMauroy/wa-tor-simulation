@@ -6,7 +6,7 @@ class Fish :
 
     def __init__(self) -> None:
         self.position:tuple
-        self.timeBfrReproduction = 6
+        self.timeBfrReproduction = 3
 
 #region Movement
     def get_free_position(self, line:int, column:int, available_pos_list:list) -> None : 
@@ -51,7 +51,7 @@ class Fish :
             # If gestation ends, create a new fish at our old position. Else live an empty cell
             old_x, old_y = self.position
             self.timeBfrReproduction -= 1
-            if self.timeBfrReproduction == 0 :
+            if self.timeBfrReproduction <= 0 :
                 self.reproduction(old_x, old_y)
             else :
                 planet_map[old_x, old_y] = "."
@@ -88,7 +88,7 @@ class Shark (Fish) :
 
     APPEARANCE = "\033[91m$\033[00m" # Char '$' with red color
     MAX_ENERGY = 10
-    ENERGY_BY_DISHS = 3
+    ENERGY_BY_DISHS = 2
 
     def __init__(self) -> None:
         super().__init__()
@@ -102,17 +102,67 @@ class Shark (Fish) :
     def move(self, available_positions:list) -> None:
         if super().move(available_positions) :
             self.currentEnergy -= 1
+                
 #endregion
     
 #region Find fish and eat it
     def try_fish_position(self, line:int, column:int, fish_pos_list:list):
-        """"""
+        """Check a given cell position and add it to the given list if there is a fish"""
+        from simulation import PLANET_WIDTH
+        from simulation import PLANET_HEIGHT
+        from simulation import planet_map
+        # Fix the coordonates if the position exceed the limits
+        line = line % PLANET_WIDTH
+        column = column % PLANET_HEIGHT
+        if isinstance(planet_map[line, column], Fish) and not isinstance(planet_map[line, column], Shark) :
+            fish_pos_list.append((line, column))
     
     def find_fish(self) -> list[tuple] :
         """Looks at adjacent cells for fishs and return their positions if finded"""
+        fish_positions = []
+        x, y = self.position
+        # Ci-dessous : Pas besoin de récupérer la liste, celle-ci est référencée et reste connectée 
+        # à travers la fonction (on l'a assignée dans les paramètres). 
+        # La mettre à jour va donc aussi avoir effet ici 
+        self.try_fish_position(x, y + 1, fish_positions)
+        self.try_fish_position(x, y - 1, fish_positions)
+        self.try_fish_position(x + 1, y, fish_positions)
+        self.try_fish_position(x - 1, y, fish_positions)
+        return fish_positions
 
-    def eat_fish(self, fish_positions:list[tuple]) -> None:
-        """If fishs were finded at adjacent cases, then eat it"""
+    def eat_fish(self, fish_positions:list[tuple]) -> bool:
+        """If fishs were finded at adjacent cases, then eat it
+
+        Args:
+            fish_positions (list[tuple]): List of fish positions. Can be empty
+
+        Returns:
+            bool: Wether a fish has been it or not
+        """
+        from simulation import planet_map
+        from simulation import fishs_list
+        
+        if len(fish_positions) > 0 :
+            # nextPosition is a Tuple
+            nextPosition = fish_positions[randint(0, len(fish_positions)-1)]
+            
+            # If gestation ends, create a new fish at our old position. Else live an empty cell
+            old_x, old_y = self.position
+            planet_map[old_x, old_y] = "."
+            dead_fish = planet_map[nextPosition]
+            fishs_list.remove(dead_fish)
+            
+            self.position = nextPosition
+            planet_map[self.position] = self
+            
+            if self.currentEnergy + self.ENERGY_BY_DISHS > self.MAX_ENERGY :
+                self.currentEnergy = self.MAX_ENERGY 
+            else :
+                self.currentEnergy += self.ENERGY_BY_DISHS
+            
+            return True
+        else :
+            return False
 #endregion
     
     def reproduction(self, old_x, old_y) -> None:
