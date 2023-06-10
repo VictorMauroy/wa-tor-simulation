@@ -3,10 +3,11 @@ from random import randint
 class Fish :
 
     APPEARANCE = "\033[96mp\033[00m" # Char 'p' with cyan color
+    TIME_BTW_REPRODUCTIONS = 3
 
     def __init__(self) -> None:
         self.position:tuple
-        self.timeBfrReproduction = 3
+        self.timeBfrReproduction = Fish.TIME_BTW_REPRODUCTIONS
 
 #region Movement
     def get_free_position(self, line:int, column:int, available_pos_list:list) -> None : 
@@ -73,6 +74,8 @@ class Fish :
         planet_map[old_x, old_y] = babyFish
         babyFish.position = (old_x, old_y)
         fishs_list.append(babyFish)
+        
+        self.timeBfrReproduction = Fish.TIME_BTW_REPRODUCTIONS
 
     # Update is called at each refresh
     def update(self) -> None :
@@ -88,11 +91,12 @@ class Shark (Fish) :
 
     APPEARANCE = "\033[91m$\033[00m" # Char '$' with red color
     MAX_ENERGY = 10
-    ENERGY_BY_DISHS = 2
+    ENERGY_BY_DISHS = 1
+    TIME_BTW_REPRODUCTIONS = 7
 
     def __init__(self) -> None:
-        super().__init__()
-        self.timeBfrReproduction = 7
+        self.position:tuple
+        self.timeBfrReproduction = Shark.TIME_BTW_REPRODUCTIONS
         self.currentEnergy = 4
     
 #region Determine if movement is possible and move if yes
@@ -141,19 +145,26 @@ class Shark (Fish) :
         """
         from simulation import planet_map
         from simulation import fishs_list
-        
+        from simulation import sharks_list
+               
         if len(fish_positions) > 0 :
             # nextPosition is a Tuple
             nextPosition = fish_positions[randint(0, len(fish_positions)-1)]
             
             # If gestation ends, create a new fish at our old position. Else live an empty cell
             old_x, old_y = self.position
-            planet_map[old_x, old_y] = "."
             dead_fish = planet_map[nextPosition]
             fishs_list.remove(dead_fish)
             
+            
             self.position = nextPosition
             planet_map[self.position] = self
+            
+            self.timeBfrReproduction -= 1
+            if self.timeBfrReproduction <= 0 :
+                self.reproduction(old_x, old_y)
+            else :
+                planet_map[old_x, old_y] = "."
             
             if self.currentEnergy + self.ENERGY_BY_DISHS > self.MAX_ENERGY :
                 self.currentEnergy = self.MAX_ENERGY 
@@ -174,6 +185,8 @@ class Shark (Fish) :
         planet_map[old_x, old_y] = babyShark
         babyShark.position = (old_x, old_y)
         sharks_list.append(babyShark)
+        
+        self.timeBfrReproduction = Shark.TIME_BTW_REPRODUCTIONS
     
     def update(self) -> None:
         """Determine next action at each frame depending of
