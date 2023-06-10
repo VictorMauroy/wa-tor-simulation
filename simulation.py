@@ -7,9 +7,10 @@ from livingthings import Shark
 simulate = True
 fish_population = 0
 shark_population = 0
-PLANET_WIDTH = 10
-PLANET_HEIGHT = 20
+PLANET_WIDTH = 20
+PLANET_HEIGHT = 35
 REFRESH_DELAY = 1
+turn_count = 0
 
 # Create a dictionnary filled with dots
 planet_map = { (x, y): "." for x in range(PLANET_WIDTH) for y in range(PLANET_HEIGHT)} 
@@ -70,8 +71,11 @@ def show_map() -> None :
 generate_ecosystem()
 
 while(simulate) :
+    print(f"Current turn : {turn_count}")
+    turn_count += 1    
     print(f"Number of fishs : {len(fishs_list)}")
     print(f"Number of SHARKS : {len(sharks_list)}")
+    
     show_map()
 
     for fish in fishs_list :
@@ -80,4 +84,4 @@ while(simulate) :
         shark.update()
 
     time.sleep(REFRESH_DELAY)
-    os.system("clear") #for linux and "cls" for windows
+    os.system("cls") #"clear" for linux and "cls" for windows
